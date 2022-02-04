@@ -1,16 +1,28 @@
+import os
+os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"   # see issue #152
+os.environ["CUDA_VISIBLE_DEVICES"] = ""
+
+
 import pandas as pd
 import cv2
 import numpy as np
-import matplotlib.pyplot as plt
+# import matplotlib.pyplot as plt
 from skimage import io, transform, color
 
 from skimage.feature import canny
 from skimage.transform import hough_line, hough_line_peaks
 
+import tensorflow as tf
+from tensorflow import keras
+from keras.models import load_model
+
+from keras import backend as K
+
 import pickle
 from sklearn.utils import shuffle
 from collections import Counter, defaultdict
 
+print(pickle.format_version)
 
 def crop_vertical(image):
     gray =cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
@@ -24,7 +36,9 @@ def crop_vertical(image):
     for i in range(len(dist)-1):
         sub_images.append(gray[:,int(dist[i]):int(dist[i+1])])
     return sub_images,dist
-
+#----------------------------------------------------
+#-------------------------function changed---------------
+#-------------------------------------------------------
 def move_coord(coordinates,dist):
     new_coordinates=[]
     for d in range(len(dist)-1):
@@ -37,12 +51,24 @@ def move_coord(coordinates,dist):
                 new_cor[0]=new_cor[0]-dist[i]
                 new_coordinates[i].append(new_cor)
     ordered_coor=[]
+    minl=0
     for coor in new_coordinates:
         new_coordinates_df=pd.DataFrame(coor,columns=['X', 'Y','L','W'])
         new_coordinates_df=new_coordinates_df.sort_values(by=['Y','X'])
+        new_coordinates_df['order']=np.arange(new_coordinates_df.shape[0],dtype=int)
+#         print(f"min: {minl} , max: {minl+new_coordinates_df.shape[0]}")
+        minl=minl+new_coordinates_df.shape[0]
         ordered_coordinates=new_coordinates_df.to_numpy()
         ordered_coor.append(ordered_coordinates)
-    return ordered_coor
+    ordered_full_coordinates=[]
+    for i in range(len(ordered_coor)):
+        ordered_full_coordinate=[]
+        for cor in ordered_coor[i]:
+            cor[0]= cor[0]+dist[i]
+            ordered_full_coordinate.append(cor)
+        ordered_full_coordinates.append(ordered_full_coordinate)
+    return ordered_coor,ordered_full_coordinates
+    #-----------------------------------------
 
 def get_glyphs(gray_image,coordinates):
     glyphs=[]
@@ -157,10 +183,15 @@ def predict_lm(Xtest,multi_anchor_img,multi_anchor_label,model,language_model):
             preds.append(predicted)
     return preds
 
-def predict_all(glyphs,model,multi_anchor_img,multi_anchor_label,language_model):
+#----------------------------------------------------
+#-------------------------function changed---------------
+#-------------------------------------------------------
+
+def predict_all(glyphs,model,multi_anchor_img,multi_anchor_label,language_model,coordinates):
     predictions=[]
+    pred_arr=[]
+    
     for glyph_list in glyphs:
-        
         sentence_padded = pad_images(glyph_list)
         preds=predict_lm(sentence_padded,multi_anchor_img,multi_anchor_label,model,language_model)
         pred_sub="".join(preds)
@@ -170,32 +201,51 @@ def predict_all(glyphs,model,multi_anchor_img,multi_anchor_label,language_model)
 #             maxp = np.argmax(predicted)
 #             pred_sub+=targets[maxp]
         predictions.append(pred_sub)
-    return predictions
+        pred_arr.append(preds)
+    return predictions,pred_arr
+#----------------------------------------------------------
 
+#----------------------------------------------------
+#-------------------------function changed---------------
+#-------------------------------------------------------
 def image_to_gardiner(img,coordinates,multi_anchor_img,multi_anchor_label,model,language_model):
     
     sub_images,dist=crop_vertical(img)
     
-    new_coordinates=move_coord(coordinates,dist)
+    new_coordinates,ordered_full_coordinates=move_coord(coordinates,dist)
     
     glyphs=[]
     for i in range(len(sub_images)):
         glyphs.append(get_glyphs(sub_images[i],new_coordinates[i]))
     
-    preds=predict_all(glyphs,model,multi_anchor_img,multi_anchor_label,language_model)
+    preds,pred_arr=predict_all(glyphs,model,multi_anchor_img,multi_anchor_label,language_model,coordinates)
     
-    return preds
+#     print()
+    final_coor=[]
+    for i in range(len(ordered_full_coordinates)):
+        cor_list=[]
+        for j in range(len(ordered_full_coordinates[i])):
+            # print(i,j)
+            cor_list.append({"coor":ordered_full_coordinates[i][j],"pred":[pred_arr[i][j]]})
+        final_coor.append(cor_list)
+    
+    return preds,final_coor
+    #-----------------------------------------
 
 # read all files needed
-with open("fine_tuned_model.pickle", "rb") as f:
-    (model) = pickle.load(f)
+# with open("fine_tuned_model(1).pickle", "rb") as f:
+#     (model) = pickle.load(f)
 
-with open("multi_anchor.pickle", "rb") as f:
-    (multi_anchor_img,multi_anchor_label) = pickle.load(f)
+# with tf.device('/cpu:0'):
+# model = load_model('final_model.h5')
 
-import dill as pickle
-with open("language_model_sent.pkl", "rb") as f:
-    language_model = pickle.load(f)
+
+# with open("multi_anchor.pickle", "rb") as f:
+#     (multi_anchor_img,multi_anchor_label) = pickle.load(f)
+
+# import dill as pickle
+# with open("language_model_sent.pkl", "rb") as f:
+#     language_model = pickle.load(f)
 
 
 #----------main ------------
@@ -203,5 +253,7 @@ test_img=io.imread('test/0.jpg')
 detected=pd.read_json('test/image_0_predictions.txt')
 coordinates=detected['bbox']
 
-final_pred=image_to_gardiner(test_img,coordinates,multi_anchor_img,multi_anchor_label,model,language_model)
+
+
+# final_pred,final_coor=image_to_gardiner(test_img,coordinates,multi_anchor_img,multi_anchor_label,model,language_model)
 print(final_pred)

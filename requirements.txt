@@ -1,8 +1,77 @@
-dill==0.3.1.1
-matplotlib==3.1.3
-numpy==1.18.1
-opencv_python==4.2.0.34
-pandas==1.0.1
-scikit_image==0.16.2
-scikit_learn==1.0.1
-skimage==0.0
+absl-py @ file:///tmp/build/80754af9/absl-py_1600297518631/work
+aiohttp @ file:///tmp/build/80754af9/aiohttp_1602530294624/work
+astunparse==1.6.3
+async-timeout==3.0.1
+attrs @ file:///tmp/build/80754af9/attrs_1600298409949/work
+blinker==1.4
+brotlipy==0.7.0
+cachetools @ file:///tmp/build/80754af9/cachetools_1596822027882/work
+certifi==2020.6.20
+cffi @ file:///tmp/build/80754af9/cffi_1600699146221/work
+chardet==3.0.4
+click==7.1.2
+cryptography @ file:///tmp/build/80754af9/cryptography_1601046815590/work
+cycler==0.11.0
+dill==0.3.4
+flatbuffers==2.0
+fonttools==4.28.4
+gast==0.3.3
+google-auth @ file:///tmp/build/80754af9/google-auth_1601995530934/work
+google-auth-oauthlib==0.4.1
+google-pasta==0.2.0
+grpcio @ file:///tmp/build/80754af9/grpcio_1597424474635/work
+h5py @ file:///tmp/build/80754af9/h5py_1593454122442/work
+idna @ file:///tmp/build/80754af9/idna_1593446292537/work
+imageio==2.13.3
+importlib-metadata @ file:///tmp/build/80754af9/importlib-metadata_1602276842396/work
+joblib==1.1.0
+keras==2.7.0
+Keras-Preprocessing==1.1.2
+kiwisolver==1.3.2
+libclang==12.0.0
+Markdown @ file:///tmp/build/80754af9/markdown_1603216487943/work
+matplotlib==3.5.1
+mkl-fft==1.2.0
+mkl-random==1.1.0
+mkl-service==2.3.0
+multidict @ file:///tmp/build/80754af9/multidict_1600456399709/work
+numpy @ file:///tmp/build/80754af9/numpy_and_numpy_base_1596233721170/work
+oauthlib==3.1.0
+opencv-python==4.5.4.60
+opt-einsum==3.1.0
+packaging==21.3
+pandas==1.3.5
+Pillow==8.4.0
+protobuf==3.13.0
+pyasn1==0.4.8
+pyasn1-modules==0.2.8
+pycparser @ file:///tmp/build/80754af9/pycparser_1594388511720/work
+PyJWT==1.7.1
+pyOpenSSL @ file:///tmp/build/80754af9/pyopenssl_1594392929924/work
+pyparsing==3.0.6
+PySocks==1.7.1
+python-dateutil==2.8.2
+pytz==2021.3
+PyWavelets==1.2.0
+requests @ file:///tmp/build/80754af9/requests_1592841827918/work
+requests-oauthlib==1.3.0
+rsa @ file:///tmp/build/80754af9/rsa_1596998415516/work
+scikit-image==0.19.1
+scikit-learn==1.0.1
+scipy==1.7.3
+six==1.15.0
+tensorboard==2.7.0
+tensorboard-data-server==0.6.1
+tensorboard-plugin-wit==1.6.0
+tensorflow==2.7.0
+tensorflow-estimator==2.7.0
+tensorflow-io-gcs-filesystem==0.23.1
+termcolor==1.1.0
+threadpoolctl==3.0.0
+tifffile==2021.11.2
+typing-extensions==4.0.1
+urllib3 @ file:///tmp/build/80754af9/urllib3_1603305693037/work
+Werkzeug==1.0.1
+wrapt==1.12.1
+yarl @ file:///tmp/build/80754af9/yarl_1602693007734/work
+zipp @ file:///tmp/build/80754af9/zipp_1603306325174/work

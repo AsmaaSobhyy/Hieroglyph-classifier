@@ -13,7 +13,7 @@ def preprocess(img):
 
 ##----------main test----
 
-img=io.imread('test/unas3.JPG')
+img=io.imread('test/pretest.JPG')
 preprocessed=preprocess(img)
 # plt.imshow(preprocessed)
 cv2.imwrite('test/prep.jpg',preprocessed)
