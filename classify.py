@@ -232,20 +232,20 @@ def image_to_gardiner(img,coordinates,multi_anchor_img,multi_anchor_label,model,
     return preds,final_coor
     #-----------------------------------------
 
-# read all files needed
-# with open("fine_tuned_model(1).pickle", "rb") as f:
-#     (model) = pickle.load(f)
+read all files needed
+with open("fine_tuned_model(1).pickle", "rb") as f:
+    (model) = pickle.load(f)
 
-# with tf.device('/cpu:0'):
-# model = load_model('final_model.h5')
+with tf.device('/cpu:0'):
+model = load_model('final_model.h5')
 
 
-# with open("multi_anchor.pickle", "rb") as f:
-#     (multi_anchor_img,multi_anchor_label) = pickle.load(f)
+with open("multi_anchor.pickle", "rb") as f:
+    (multi_anchor_img,multi_anchor_label) = pickle.load(f)
 
-# import dill as pickle
-# with open("language_model_sent.pkl", "rb") as f:
-#     language_model = pickle.load(f)
+import dill as pickle
+with open("language_model_sent.pkl", "rb") as f:
+    language_model = pickle.load(f)
 
 
 #----------main ------------
@@ -255,5 +255,5 @@ coordinates=detected['bbox']
 
 
 
-# final_pred,final_coor=image_to_gardiner(test_img,coordinates,multi_anchor_img,multi_anchor_label,model,language_model)
+final_pred,final_coor=image_to_gardiner(test_img,coordinates,multi_anchor_img,multi_anchor_label,model,language_model)
 print(final_pred)
